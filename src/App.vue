@@ -1,226 +1,85 @@
 <template>
   <div id="app">
-    <div class="container">
-      <div class="question" v-if="this.numberOfQuestions >=0">
-        <h1>Pick the <b :style="'color:'+answers[correctAnsIndex].value">{{answers[correctAnsIndex].value}}</b> word from the choices below </h1>
-        <div class="timer">00:0{{time}}</div>
-        <div class="timer">Score :: {{score}}</div>
-      </div>
-      <div class="question" v-else>
-        {{result}}
-      </div>
-      <div class="answers">
-        <div  :class="'answer '+ answers[0].color + getDarKClass(answers[0].color)" @click="answer(0)">
-          {{answers[0].value}}
-        </div>
-        <div :class="'answer '+ answers[1].color + getDarKClass(answers[1].color)"  @click="answer(1)">
-          {{answers[1].value}}
-        </div>
-        <div :class="'answer '+ answers[2].color + getDarKClass(answers[2].color)"  @click="answer(2)">
-          {{answers[2].value}}
-        </div>
-        <div :class="'answer '+ answers[3].color + getDarKClass(answers[3].color)" @click="answer(3)">
-          {{answers[3].value}}
-        </div>
-        
+    <game v-on:finished="endGame" :class="start? '':'hide'" ref="game"/>
+    <div :class="start? 'hide':''" >
+      <h1>Color game</h1>
+
+      <label for="number">Number of question</label>
+      <input v-model="numberOfQuestions" type="number" name="number" >
+      <br>
+      
+      <label for="shuffle">shuffle colors</label>
+      <input type="checkbox" name="shuffle" v-model="withShuffle"><br>
+      <button @click="startGame">start</button>
+      <div class="table-container">
+        <table class="table">
+          <tr>
+            <th>#</th>
+            <th>Score</th>
+            <th>Total questions</th>
+          </tr>
+          <tr v-for="(record,index) in records" :key="index">
+            <td>{{index}}</td>
+            <td>
+              {{record.score}}
+            </td>
+            <td>
+              {{record.totalQuestion}}
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
-  </div>
+    </div>
 </template>
-
 <script>
-import { setInterval } from 'timers';
-
 export default {
-  name: 'app',
-  components: {
-  },data(){
+  data(){
     return{
-      shuffleColors:true,
-      result:"",
-      totalNumberOfQuestions:20,
+      start:false,
       numberOfQuestions:20,
-      score:0,
-      time:0,
-      timeInterval:null,
-      darkColors:['red','black','green','blue'],
-      colors:[
-        {
-          color:"red",
-          value:"red",
-        },
-        {
-          color:"green",
-          value:"green",
-        },
-        {
-          color:"yellow",
-          value:"yellow",
-        },
-        {
-          color:"pink",
-          value:"pink",
-        },
-        {
-          color:"black",
-          value:"black",
-        },
-        ],
-        answers:[
-        {
-          color:"red",
-          value:"red",
-        },
-        {
-          color:"green",
-          value:"green",
-        },
-        {
-          color:"yellow",
-          value:"yellow",
-        },
-        {
-          color:"pink",
-          value:"pink",
-        },
-        ],
-        correctAnsIndex:2,
-        keys:1,
+      withShuffle:false,
+      records:[]
     }
-  },methods:{
-    answer(index){
-      if(index==this.correctAnsIndex){
-        this.score++;
-        console.log("success")
+  },
+  methods:{
+    startGame(){
+      this.$refs.game.startTimer(this.withShuffle,this.numberOfQuestions);
+      this.start = true;
+    },endGame(){
+      this.start = false;
+      let obj = {
+        score:this.$refs.game.getScore(),
+        totalQuestion:this.$refs.game.getNumberOfQuestions(),
       }
-      this.getQuestion();
-      this.time = 5;  
-    },
-    getDarKClass(color){
-      if(this.darkColors.indexOf(color) ==-1){
-        return '';
-      }
-      return " dark"
-    },
-    count:function(){
-      if(this.numberOfQuestions<0){
-        this.result = "You have answerd "+this.score+" out of "+this.totalNumberOfQuestions;
-        clearInterval( this.timeInterval);
-        return;
-      }
-      if(this.time<=0){
-        this.time = 5;
-        this.getQuestion();
-        return;
-      }
-      this.time--;
-
-    }, shuffleArray:function(arr) {
-          let array = arr
-          for (let i = array.length - 1; i > 0; i--) {
-              let j = Math.floor(Math.random() * (i + 1));
-              let temp = array[i];
-              array[i] = array[j];
-              array[j] = temp;
-          }
-          return array;
-      },
-      getQuestion:function(){
-        this.answers = this.shuffleArray(this.colors).slice(0,4);
-        this.correctAnsIndex = Math.floor(Math.random() * (this.answers.length ));
-        this.numberOfQuestions--
-        if(!this.shuffleColors){
-          return;
-        }
-        for (let i = 0; i < this.answers.length; i++) {
-          if(i===0){
-            let t = this.answers[i+1].value;
-            this.answers[i+1].value = this.answers[0].value;
-            this.answers[0].value = t;
-            continue;
-          }
-          let t = this.answers[i-1].value;
-          if(t===undefined){
-            console.log("ERR "+i);
-            continue;
-          }
-          
-          this.answers[i-1].value = this.answers[i].value;
-          this.answers[i].value = t;
-        }
-        while(this.answers[this.correctAnsIndex].value===this.answers[this.correctAnsIndex].color){
-          
-          this.correctAnsIndex = Math.floor(Math.random() * (this.answers.length ));
-        }
-        
-        
-        
-      }
-  
-  }
-  ,mounted(){
-    this.timeInterval = setInterval(this.count,1000);
+      this.records.push(obj);
+    }
   }
 }
 </script>
-
 <style>
-.timer{
-  font-size: 15pt;
+.table-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.green{
-  background: green;
+.hide{
+  display: none;
 }
-.yellow{
-  background: yellow;
+table {
+  
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 50%;
 }
-.red{
-  background: red;
-}
-.black{
-  background: #000;
-}
-.pink{
-  background: pink;
-}
-.container{
-  position: absolute;
 
-  width: 100%;
-  height: 100%;
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
 }
-.question{
-  flex-basis: 50%;
-}
-.answers{
-  flex-basis: 50%;
-  display: flex;
-  flex-flow: wrap;
-}
-.answer{
-  flex-basis: 50%;
-  align-content: center;
-  vertical-align: middle;
-  cursor: pointer;
-  font-size: 20px;
-}
-.dark{
-    color: white;
-}
-#app {
 
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+tr:nth-child(even) {
+  background-color: #dddddd;
 }
 </style>
