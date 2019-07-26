@@ -1,28 +1,192 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="container">
+      <div class="question">
+        <h1>Pick the <b :style="'color:'+answers[correctAnsIndex].color">{{answers[correctAnsIndex].color}}</b> word from the choices below </h1>
+        <div class="timer">00:0{{time}}</div>
+        <div class="timer">Score :: {{score}}</div>
+      </div>
+      <div class="answers">
+        <div  :class="'answer '+ answers[0].color + (darkColors.indexOf(answers[0].value)===-1? ' dark':'')">
+          {{answers[0].value}}
+        </div>
+        <div :class="'answer '+ answers[1].color + (darkColors.indexOf(answers[0].value)!==-1? ' dark':'')">
+          {{answers[1].value}}
+        </div>
+        <div :class="'answer '+ answers[2].color + (darkColors.indexOf(answers[0].value)!==-1? ' dark':'')">
+          {{answers[2].value}}
+        </div>
+        <div :class="'answer '+ answers[3].color + (darkColors.indexOf(answers[0].value)!==-1? ' dark':'')">
+          {{answers[3].value}}
+        </div>
+        
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { setInterval } from 'timers';
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+  },data(){
+    return{
+      score:0,
+      time:1,
+      timeInterval:null,
+      darkColors:['red','black','green','blue'],
+      colors:[
+        {
+          color:"red",
+          value:"red",
+        },
+        {
+          color:"green",
+          value:"green",
+        },
+        {
+          color:"yellow",
+          value:"yellow",
+        },
+        {
+          color:"pink",
+          value:"pink",
+        },
+        {
+          color:"black",
+          value:"black",
+        },
+        ],
+        answers:[
+        {
+          color:"red",
+          value:"red",
+        },
+        {
+          color:"green",
+          value:"green",
+        },
+        {
+          color:"yellow",
+          value:"yellow",
+        },
+        {
+          color:"pink",
+          value:"pink",
+        },
+        ],
+        correctAnsIndex:2,
+        keys:1,
+    }
+  },methods:{
+    count:function(){
+      if(this.time<=0){
+        this.time = 5;
+        this.getQuestion();
+        return;
+      }
+      this.time--;
+
+    }, shuffleArray:function(arr) {
+          let array = arr
+          for (let i = array.length - 1; i > 0; i--) {
+              let j = Math.floor(Math.random() * (i + 1));
+              let temp = array[i];
+              array[i] = array[j];
+              array[j] = temp;
+          }
+          return array;
+      },
+      getQuestion:function(){
+        this.answers = this.shuffleArray(this.colors).slice(0,4);
+        for (let i = 0; i < this.answers.length; i++) {
+          if(i===0){
+            let t = this.answers[i+1].value;
+            this.answers[i+1].value = this.answers[0].value;
+            this.answers[0].value = t;
+            continue;
+          }
+          let t = this.answers[i-1].value;
+          if(t===undefined){
+            console.log("ERR "+i);
+            continue;
+          }
+          
+          this.answers[i-1].value = this.answers[i].value;
+          this.answers[i].value = t;
+        }
+        
+        
+        this.correctAnsIndex = Math.floor(Math.random() * (this.answers.length ));
+        
+      }
+  
+  }
+  ,mounted(){
+    this.timeInterval = setInterval(this.count,1000);
   }
 }
 </script>
 
 <style>
+.timer{
+  font-size: 15pt;
+}
+.green{
+  background: green;
+}
+.yellow{
+  background: yellow;
+}
+.red{
+  background: red;
+}
+.black{
+  background: #000;
+}
+.pink{
+  background: pink;
+}
+.container{
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.question{
+  flex-basis: 50%;
+}
+.answers{
+  flex-basis: 50%;
+  display: flex;
+  flex-flow: wrap;
+}
+.answer{
+  flex-basis: 50%;
+  align-content: center;
+  vertical-align: middle;
+  cursor: pointer;
+  font-size: 20px;
+}
+.dark{
+    color: white;
+}
 #app {
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
