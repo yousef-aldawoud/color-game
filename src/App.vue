@@ -1,10 +1,13 @@
 <template>
   <div id="app">
     <div class="container">
-      <div class="question">
+      <div class="question" v-if="this.numberOfQuestions >=0">
         <h1>Pick the <b :style="'color:'+answers[correctAnsIndex].value">{{answers[correctAnsIndex].value}}</b> word from the choices below </h1>
         <div class="timer">00:0{{time}}</div>
         <div class="timer">Score :: {{score}}</div>
+      </div>
+      <div class="question" v-else>
+        {{result}}
       </div>
       <div class="answers">
         <div  :class="'answer '+ answers[0].color + getDarKClass(answers[0].color)" @click="answer(0)">
@@ -33,8 +36,12 @@ export default {
   components: {
   },data(){
     return{
+      shuffleColors:true,
+      result:"",
+      totalNumberOfQuestions:20,
+      numberOfQuestions:20,
       score:0,
-      time:1,
+      time:0,
       timeInterval:null,
       darkColors:['red','black','green','blue'],
       colors:[
@@ -96,6 +103,11 @@ export default {
       return " dark"
     },
     count:function(){
+      if(this.numberOfQuestions<0){
+        this.result = "You have answerd "+this.score+" out of "+this.totalNumberOfQuestions;
+        clearInterval( this.timeInterval);
+        return;
+      }
       if(this.time<=0){
         this.time = 5;
         this.getQuestion();
@@ -115,6 +127,11 @@ export default {
       },
       getQuestion:function(){
         this.answers = this.shuffleArray(this.colors).slice(0,4);
+        this.correctAnsIndex = Math.floor(Math.random() * (this.answers.length ));
+        this.numberOfQuestions--
+        if(!this.shuffleColors){
+          return;
+        }
         for (let i = 0; i < this.answers.length; i++) {
           if(i===0){
             let t = this.answers[i+1].value;
@@ -131,9 +148,12 @@ export default {
           this.answers[i-1].value = this.answers[i].value;
           this.answers[i].value = t;
         }
+        while(this.answers[this.correctAnsIndex].value===this.answers[this.correctAnsIndex].color){
+          
+          this.correctAnsIndex = Math.floor(Math.random() * (this.answers.length ));
+        }
         
         
-        this.correctAnsIndex = Math.floor(Math.random() * (this.answers.length ));
         
       }
   
