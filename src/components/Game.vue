@@ -97,7 +97,6 @@ export default {
     answer(index){
       if(index==this.correctAnsIndex){
         this.score++;
-        console.log("success")
       }
       this.getQuestion();
       this.time = 5;  
@@ -149,7 +148,6 @@ export default {
           }
           let t = this.answers[i-1].value;
           if(t===undefined){
-            console.log("ERR "+i);
             continue;
           }
           
@@ -165,6 +163,7 @@ export default {
         
       },startTimer(shuffle=false,numberOfQuestions=20){
           this.shuffleColors = shuffle;
+          this.score = 0;
           this.numberOfQuestions = numberOfQuestions;
           this.totalNumberOfQuestions = numberOfQuestions;
           this.timeInterval = setInterval(this.count,1000);
