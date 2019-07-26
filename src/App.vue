@@ -7,16 +7,16 @@
         <div class="timer">Score :: {{score}}</div>
       </div>
       <div class="answers">
-        <div  :class="'answer '+ answers[0].color + (darkColors.indexOf(answers[0].value)===-1? ' dark':'')">
+        <div  :class="'answer '+ answers[0].color + getDarKClass(answers[0].color)">
           {{answers[0].value}}
         </div>
-        <div :class="'answer '+ answers[1].color + (darkColors.indexOf(answers[0].value)!==-1? ' dark':'')">
+        <div :class="'answer '+ answers[1].color + getDarKClass(answers[1].color)">
           {{answers[1].value}}
         </div>
-        <div :class="'answer '+ answers[2].color + (darkColors.indexOf(answers[0].value)!==-1? ' dark':'')">
+        <div :class="'answer '+ answers[2].color + getDarKClass(answers[2].color)">
           {{answers[2].value}}
         </div>
-        <div :class="'answer '+ answers[3].color + (darkColors.indexOf(answers[0].value)!==-1? ' dark':'')">
+        <div :class="'answer '+ answers[3].color + getDarKClass(answers[3].color)">
           {{answers[3].value}}
         </div>
         
@@ -81,6 +81,12 @@ export default {
         keys:1,
     }
   },methods:{
+    getDarKClass(color){
+      if(this.darkColors.indexOf(color) ==-1){
+        return '';
+      }
+      return " dark"
+    },
     count:function(){
       if(this.time<=0){
         this.time = 5;
