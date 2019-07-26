@@ -2,21 +2,21 @@
   <div id="app">
     <div class="container">
       <div class="question">
-        <h1>Pick the <b :style="'color:'+answers[correctAnsIndex].color">{{answers[correctAnsIndex].color}}</b> word from the choices below </h1>
+        <h1>Pick the <b :style="'color:'+answers[correctAnsIndex].value">{{answers[correctAnsIndex].value}}</b> word from the choices below </h1>
         <div class="timer">00:0{{time}}</div>
         <div class="timer">Score :: {{score}}</div>
       </div>
       <div class="answers">
-        <div  :class="'answer '+ answers[0].color + getDarKClass(answers[0].color)">
+        <div  :class="'answer '+ answers[0].color + getDarKClass(answers[0].color)" @click="answer(0)">
           {{answers[0].value}}
         </div>
-        <div :class="'answer '+ answers[1].color + getDarKClass(answers[1].color)">
+        <div :class="'answer '+ answers[1].color + getDarKClass(answers[1].color)"  @click="answer(1)">
           {{answers[1].value}}
         </div>
-        <div :class="'answer '+ answers[2].color + getDarKClass(answers[2].color)">
+        <div :class="'answer '+ answers[2].color + getDarKClass(answers[2].color)"  @click="answer(2)">
           {{answers[2].value}}
         </div>
-        <div :class="'answer '+ answers[3].color + getDarKClass(answers[3].color)">
+        <div :class="'answer '+ answers[3].color + getDarKClass(answers[3].color)" @click="answer(3)">
           {{answers[3].value}}
         </div>
         
@@ -81,6 +81,14 @@ export default {
         keys:1,
     }
   },methods:{
+    answer(index){
+      if(index==this.correctAnsIndex){
+        this.score++;
+        console.log("success")
+      }
+      this.getQuestion();
+      this.time = 5;  
+    },
     getDarKClass(color){
       if(this.darkColors.indexOf(color) ==-1){
         return '';
