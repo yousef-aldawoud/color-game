@@ -10,7 +10,7 @@
       
       <label for="shuffle">shuffle colors</label>
       <input type="checkbox" name="shuffle" v-model="withShuffle"><br>
-      <button @click="startGame">start</button>
+      <button @click="startGame" class="btn">start</button>
       <div class="table-container">
         <table class="table">
           <tr>
@@ -58,6 +58,14 @@ export default {
 }
 </script>
 <style>
+.btn{
+  cursor: pointer;
+  margin: 10px;
+  padding: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 15pt;
+}
 .table-container{
   display: flex;
   align-items: center;

@@ -36,6 +36,7 @@ export default {
   components: {
   },data(){
     return{
+      QUESTION_TIME:3,
       shuffleColors:true,
       result:"",
       totalNumberOfQuestions:20,
@@ -99,7 +100,7 @@ export default {
         this.score++;
       }
       this.getQuestion();
-      this.time = 5;  
+      this.time = this.QUESTION_TIME;  
     },
     getDarKClass(color){
       if(this.darkColors.indexOf(color) ==-1){
@@ -116,7 +117,7 @@ export default {
         return;
       }
       if(this.time<=0){
-        this.time = 5;
+        this.time = this.QUESTION_TIME;
         this.getQuestion();
         return;
       }
