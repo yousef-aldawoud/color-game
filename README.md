@@ -1,5 +1,7 @@
 # color-game
 
+[Live view](https://yousef-aldawoud.github.io/color-game/)
+
 ## Project setup
 ```
 npm install
