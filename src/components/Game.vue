@@ -10,16 +10,20 @@
         {{result}}
       </div>
       <div class="answers">
-        <div  :class="'answer '+ answers[0].color + getDarKClass(answers[0].color)" @click="answer(0)">
+        <div  :class="'answer '+ answers[0].color + getDarKClass(answers[0].color)" >
+          <h1>1</h1>
           {{answers[0].value}}
         </div>
-        <div :class="'answer '+ answers[1].color + getDarKClass(answers[1].color)"  @click="answer(1)">
+        <div :class="'answer '+ answers[1].color + getDarKClass(answers[1].color)"  >
+          <h1>2</h1>
           {{answers[1].value}}
         </div>
-        <div :class="'answer '+ answers[2].color + getDarKClass(answers[2].color)"  @click="answer(2)">
+        <div :class="'answer '+ answers[2].color + getDarKClass(answers[2].color)"  >
+          <h1>3</h1>
           {{answers[2].value}}
         </div>
-        <div :class="'answer '+ answers[3].color + getDarKClass(answers[3].color)" @click="answer(3)">
+        <div :class="'answer '+ answers[3].color + getDarKClass(answers[3].color)" >
+          <h1>4</h1>
           {{answers[3].value}}
         </div>
         
@@ -113,6 +117,7 @@ export default {
         this.result = "You have answerd "+this.score+" out of "+this.totalNumberOfQuestions;
         clearInterval( this.timeInterval);
         this.time = 0;
+        document.onkeypress = null;
         this.$emit("finished");
         return;
       }
@@ -163,18 +168,25 @@ export default {
         
         
       },startTimer(shuffle=false,numberOfQuestions=20){
+          this.setUpKeys();
           this.shuffleColors = shuffle;
           this.score = 0;
           this.numberOfQuestions = numberOfQuestions;
           this.totalNumberOfQuestions = numberOfQuestions;
           this.timeInterval = setInterval(this.count,1000);
           
+      },setUpKeys(){
+        document.onkeypress = (e)=>{
+          if(e.key in ["1","2","3","4"]){
+            this.answer(Number(e.key)-1);
+          }
+        }
       }
   
   }
 
   ,mounted(){
-      
+
   }
 }
 </script>
