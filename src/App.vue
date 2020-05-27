@@ -17,6 +17,7 @@
             <th>#</th>
             <th>Score</th>
             <th>Total questions</th>
+            <th>Shuffled colors</th>
           </tr>
           <tr v-for="(record,index) in records" :key="index">
             <td>{{index}}</td>
@@ -25,6 +26,9 @@
             </td>
             <td>
               {{record.totalQuestion}}
+            </td>
+            <td>
+              {{record.withShuffle ? "Shuffled":"Normal"}}
             </td>
           </tr>
         </table>
@@ -51,6 +55,7 @@ export default {
       let obj = {
         score:this.$refs.game.getScore(),
         totalQuestion:this.$refs.game.getNumberOfQuestions(),
+        withShuffle:this.withShuffle,
       }
       this.records.push(obj);
     }
