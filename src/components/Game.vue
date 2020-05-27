@@ -138,6 +138,7 @@ export default {
         this.correctAnsIndex = Math.floor(Math.random() * (this.answers.length ));
         this.numberOfQuestions--
         if(!this.shuffleColors){
+          this.resetColors();
           return;
         }
         for (let i = 0; i < this.answers.length; i++) {
@@ -169,6 +170,30 @@ export default {
           this.totalNumberOfQuestions = numberOfQuestions;
           this.timeInterval = setInterval(this.count,1000);
           
+      },
+      resetColors(){
+        this.colors = [
+                  {
+          color:"red",
+          value:"red",
+        },
+        {
+          color:"green",
+          value:"green",
+        },
+        {
+          color:"yellow",
+          value:"yellow",
+        },
+        {
+          color:"pink",
+          value:"pink",
+        },
+        {
+          color:"black",
+          value:"black",
+        },
+        ];
       }
   
   }

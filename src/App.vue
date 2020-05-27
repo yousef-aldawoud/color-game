@@ -11,6 +11,7 @@
       <label for="shuffle">shuffle colors</label>
       <input type="checkbox" name="shuffle" v-model="withShuffle"><br>
       <button @click="startGame" class="btn">start</button>
+      <button @click="startGame" class="btn">start</button>
       <div class="table-container">
         <table class="table">
           <tr>
