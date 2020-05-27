@@ -110,6 +110,7 @@ export default {
     },
     count:function(){
       if(this.numberOfQuestions<0){
+        this.resetColors();
         this.result = "You have answerd "+this.score+" out of "+this.totalNumberOfQuestions;
         clearInterval( this.timeInterval);
         this.time = 0;
